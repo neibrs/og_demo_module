@@ -1,0 +1,23 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\og\Og;
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for group of node bundle.
+ */
+function og_demo_module_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $definition = \Drupal::entityTypeManager()->getDefinition($entity->getEntityTypeId());
+  $entity_type_id = $definition->getBundleOf();
+
+  $user = \Drupal::currentUser();
+  if ($entity->og_is_group && $user->isAuthenticated()) {
+    \Drupal::messenger()->addMessage(t('Hi %account, click here %subscribe if you would like to subscribe to this group called %group', [
+      '%account' => $user->getAccountName(),
+      '%subscribe' => Url::fromRoute('og.subscribe', ['entity_type_id' => $entity_type_id])->toString(),
+      '%group' => $entity->label(),
+    ]));
+  }
+}

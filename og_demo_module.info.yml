@@ -1,0 +1,7 @@
+name: "Og demo module"
+type: module
+core: 8.x
+package: "Og demo"
+dependencies:
+  - node
+  - og
